@@ -1,0 +1,49 @@
+local HENG = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+local MainWindow = HENG:CreateWindow({
+	Name = "99night in the forest by.2BK2",
+	LoadingTitle = "welcome TO 2BK2",
+	LoadingSubtitle = "BK",
+	ConfigurationSaving = {
+	   Enabled = true,
+	   FolderName = nil, -- Create a custom folder for your hub/game
+	   FileName = "BK Hub"
+	},
+	Discord = {
+	   Enabled = false,
+	   Invite = "", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ABCD would be ABCD.
+	   RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+	},
+	KeySystem = false, -- Set this to true to use our key system
+	KeySettings = {
+	   Title = "BK Hub",
+	   Subtitle = "Key System",
+	   Note = "Key: BK",
+	   FileName = "SiriusKey",
+	   SaveKey = true,
+	   GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+	   Key = "BK"
+	}
+ })
+ local MainTab = MainWindow:CreateTab("MainRUN", "home") -- Title, Image
+
+ local Slider = MainTab:CreateSlider({
+    Name = "បង្កើនល្បឿនរត់",
+    Range = {1, 350},
+    Increment = 1,
+    Suffix = "Speed",
+    CurrentValue = 1,
+    Flag = "Slider9", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Callback = function(Value)
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = (Value)
+    end,
+ })
+
+ local Button2 = MainTab:CreateButton({
+   Name = "ទៅផ្ទះវិញ",
+   Callback = function()
+    tweenService, tweenInfo = game:GetService("TweenService"), TweenInfo.new(1.2, Enum.EasingStyle.Linear)
+    tweenService:Create(game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart, tweenInfo, {CFrame = CFrame.new(-1.56866837, 2.77634621, 0.013792038, -0.624685407, 0.590630472, -0.510807037, 0.639678538, 0.762232661, 0.0990589112, 0.447861046, -0.264871657, -0.853969336)}):Play() --teleport
+   end,
+})
+
+
