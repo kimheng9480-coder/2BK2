@@ -7,7 +7,6 @@ local TweenService = game:GetService("TweenService")
 local LocalPlayer = Players.LocalPlayer
 local Holding = false
 
-_G.AimbotEnabled = true
 _G.TeamCheck = false
 _G.AimPart = "Head"
 _G.Sensitivity = 0
