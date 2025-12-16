@@ -4,8 +4,8 @@ local Camera = workspace.CurrentCamera
 
 local LocalPlayer = Players.LocalPlayer
 
-_G.ESPEnabled = true
-_G.TEAMcheck1 = false -- true = don't ESP your team
+_G.ESPEnabled = false
+_G.TEAMcheck1 = true -- true = don't ESP your team
 _G.ESPColor = Color3.fromRGB(255, 0, 0)
 
 local function CreateESP(player)
