@@ -1,0 +1,71 @@
+local Camera = workspace.CurrentCamera
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+
+local LocalPlayer = Players.LocalPlayer
+local Holding = false
+
+_G.AimbotEnabled = true
+_G.TeamCheck = false
+_G.AimPart = "Head"
+_G.Sensitivity = 0
+
+local function GetClosestPlayer()
+	local MaximumDistance = math.huge
+	local Target = nil
+	local MousePos = UserInputService:GetMouseLocation()
+
+	for _, v in ipairs(Players:GetPlayers()) do
+		if v ~= LocalPlayer and v.Character then
+			local humanoid = v.Character:FindFirstChild("Humanoid")
+			local root = v.Character:FindFirstChild("HumanoidRootPart")
+
+			if humanoid and root and humanoid.Health > 0 then
+				if not _G.TeamCheck or v.Team ~= LocalPlayer.Team then
+					local screenPos, onScreen = Camera:WorldToViewportPoint(root.Position)
+					if onScreen then
+						local distance = (Vector2.new(MousePos.X, MousePos.Y) - Vector2.new(screenPos.X, screenPos.Y)).Magnitude
+						if distance < MaximumDistance then
+							MaximumDistance = distance
+							Target = v
+						end
+					end
+				end
+			end
+		end
+	end
+
+	return Target
+end
+
+UserInputService.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton2 then
+		Holding = true
+	end
+end)
+
+UserInputService.InputEnded:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton2 then
+		Holding = false
+	end
+end)
+
+RunService.RenderStepped:Connect(function()
+	if Holding and _G.AimbotEnabled then
+		local target = GetClosestPlayer()
+		if target and target.Character and target.Character:FindFirstChild(_G.AimPart) then
+			TweenService:Create(
+				Camera,
+				TweenInfo.new(_G.Sensitivity, Enum.EasingStyle.Sine, Enum.EasingDirection.Out),
+				{
+					CFrame = CFrame.new(
+						Camera.CFrame.Position,
+						target.Character[_G.AimPart].Position
+					)
+				}
+			):Play()
+		end
+	end
+end)
