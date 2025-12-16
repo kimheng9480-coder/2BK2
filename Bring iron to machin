@@ -6,7 +6,7 @@ local items = workspace.Items:GetChildren()
 for i = 1, math.min(10000, #items) do
     local item = items[i]
     if item and item.PrimaryPart then  -- ensure model has a PrimaryPart
-        local targetCFrame = CFrame.new(1.1549145, 8.30180168, 21.677948, -1, 0, 0, 0, 1, 0, 0, 0, -1)  -- replace with your position
+        local targetCFrame = CFrame.new(20.9187622, 1.88103127, -6.25677347, -1, 0, 0, 0, 1, 0, 0, 0, -1)  -- replace with your position
 
         local tween = TweenService:Create(item.PrimaryPart, tweenInfo, {CFrame = targetCFrame})
         tween:Play()
