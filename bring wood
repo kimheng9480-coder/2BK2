@@ -1,0 +1,18 @@
+local TweenService = game:GetService("TweenService")
+local tweenInfo = TweenInfo.new(1.2, Enum.EasingStyle.Linear)
+
+local items = workspace.Items:GetChildren()
+
+for i = 1, math.min(10000, #items) do  -- ensures we don't go past available items
+    local item = items[i]
+    if item then
+        local targetChild = item:FindFirstChild("Meshes/log_Cylinder")
+        if targetChild then
+            -- Replace with your desired CFrame position
+            local targetCFrame = CFrame.new(21, 4.05000067, 9.42756653, 0, 0, -1, -1, 0, 0, 0, 1, 0)
+            
+            local tween = TweenService:Create(targetChild, tweenInfo, {CFrame = targetCFrame})
+            tween:Play()
+        end
+    end
+end
