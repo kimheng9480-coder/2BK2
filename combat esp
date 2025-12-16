@@ -4,7 +4,7 @@ local Camera = workspace.CurrentCamera
 
 local LocalPlayer = Players.LocalPlayer
 
-_G.TEAMcheck1 = true -- true = don't ESP your team
+_G.TeamCheck = true -- true = don't ESP your team
 _G.ESPColor = Color3.fromRGB(255, 0, 0)
 
 local function CreateESP(player)
@@ -34,7 +34,7 @@ local function CreateESP(player)
 		end
 
 		--  TEAM CHECK
-		if _G.TEAMcheck1
+		if _G.TeamCheck
      and player.Team == LocalPlayer.Team then
 			espBox.Visible = false
 			return
