@@ -3,7 +3,7 @@ local tweenInfo = TweenInfo.new(1, Enum.EasingStyle.Linear)
 
 local items = workspace.Items:GetChildren()
 
-for i = 1, math.min(100000, #items) do
+for i = 1, math.min(10000, #items) do
     local item = items[i]
     if item and item.PrimaryPart then  -- ensure model has a PrimaryPart
         local targetCFrame = CFrame.new(1.1549145, 8.30180168, 21.677948, -1, 0, 0, 0, 1, 0, 0, 0, -1)  -- replace with your position
