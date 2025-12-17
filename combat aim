@@ -1,70 +1,78 @@
-local Camera = workspace.CurrentCamera
 local Players = game:GetService("Players")
+local UIS = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
-local UserInputService = game:GetService("UserInputService")
-local TweenService = game:GetService("TweenService")
 
+-- VARIABLES
 local LocalPlayer = Players.LocalPlayer
-local Holding = false
+local Camera = workspace.CurrentCamera
 
-_G.TeamCheck = false
-_G.AimPart = "Head"
-_G.Sensitivity = 0
+local aimbotEnabled = false
+local aiming = false
+local activeTouchId = nil
 
-local function GetClosestPlayer()
-	local MaximumDistance = math.huge
-	local Target = nil
-	local MousePos = UserInputService:GetMouseLocation()
+-- FIND CLOSEST PLAYER
+local function getClosestPlayer()
+    local closest = nil
+    local shortestDistance = math.huge
 
-	for _, v in ipairs(Players:GetPlayers()) do
-		if v ~= LocalPlayer and v.Character then
-			local humanoid = v.Character:FindFirstChild("Humanoid")
-			local root = v.Character:FindFirstChild("HumanoidRootPart")
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer
+            and player.Character
+            and player.Character:FindFirstChild("HumanoidRootPart")
+            and player.Character:FindFirstChild("Humanoid")
+            and player.Character.Humanoid.Health > 0
+            and LocalPlayer.Character
+            and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+            and (player.Team ~= LocalPlayer.Team or LocalPlayer.Team == nil) then
 
-			if humanoid and root and humanoid.Health > 0 then
-				if not _G.TeamCheck or v.Team ~= LocalPlayer.Team then
-					local screenPos, onScreen = Camera:WorldToViewportPoint(root.Position)
-					if onScreen then
-						local distance = (Vector2.new(MousePos.X, MousePos.Y) - Vector2.new(screenPos.X, screenPos.Y)).Magnitude
-						if distance < MaximumDistance then
-							MaximumDistance = distance
-							Target = v
-						end
-					end
-				end
-			end
-		end
-	end
+            local distance = (player.Character.HumanoidRootPart.Position -
+                LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
 
-	return Target
+            if distance < shortestDistance then
+                shortestDistance = distance
+                closest = player
+            end
+        end
+    end
+
+    return closest
 end
 
-UserInputService.InputBegan:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton2 then
-		Holding = true
-	end
+-- INPUT
+UIS.InputBegan:Connect(function(input, gpe)
+    if gpe or not aimbotEnabled then return end
+
+    if input.UserInputType == Enum.UserInputType.MouseButton2 then
+        aiming = true
+
+    elseif input.UserInputType == Enum.UserInputType.Touch then
+        aiming = true
+        activeTouchId = input.TouchId
+    end
 end)
 
-UserInputService.InputEnded:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton2 then
-		Holding = false
-	end
+-- INPUT END
+UIS.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton2 then
+        aiming = false
+
+    elseif input.UserInputType == Enum.UserInputType.Touch
+        and input.TouchId == activeTouchId then
+        aiming = false
+        activeTouchId = nil
+    end
 end)
 
+
+-- CAMERA LOCK
 RunService.RenderStepped:Connect(function()
-	if Holding and _G.AimbotEnabled then
-		local target = GetClosestPlayer()
-		if target and target.Character and target.Character:FindFirstChild(_G.AimPart) then
-			TweenService:Create(
-				Camera,
-				TweenInfo.new(_G.Sensitivity, Enum.EasingStyle.Sine, Enum.EasingDirection.Out),
-				{
-					CFrame = CFrame.new(
-						Camera.CFrame.Position,
-						target.Character[_G.AimPart].Position
-					)
-				}
-			):Play()
-		end
-	end
+    if aimbotEnabled and aiming then
+        local target = getClosestPlayer()
+        if target and target.Character then
+            Camera.CFrame = CFrame.new(
+                Camera.CFrame.Position,
+                target.Character.HumanoidRootPart.Position
+            )
+        end
+    end
 end)
