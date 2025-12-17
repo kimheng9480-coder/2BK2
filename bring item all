@@ -1,12 +1,12 @@
 local TweenService = game:GetService("TweenService")
-local tweenInfo = TweenInfo.new(1, Enum.EasingStyle.Linear)
+local tweenInfo = TweenInfo.new(5, Enum.EasingStyle.Linear)
 
 local items = workspace.Items:GetChildren()
 
 for i = 1, math.min(10000, #items) do
     local item = items[i]
     if item and item.PrimaryPart then  -- ensure model has a PrimaryPart
-        local targetCFrame = CFrame.new(1.1549145, 8.30180168, 21.677948, -1, 0, 0, 0, 1, 0, 0, 0, -1)  -- replace with your position
+        local targetCFrame = CFrame.new(-0.28640461, 3.9795568, 23.9717922, 0.99849993, 3.92806321e-09, 0.0547530353, -3.48440143e-09, 1, -8.19842239e-09, -0.0547530353, 7.99534217e-09, 0.99849993)  -- replace with your position
 
         local tween = TweenService:Create(item.PrimaryPart, tweenInfo, {CFrame = targetCFrame})
         tween:Play()
