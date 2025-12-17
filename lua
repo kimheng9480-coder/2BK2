@@ -10,7 +10,5 @@ if MAP99 then
 elseif MAP_COMBAT_ARENA then
     print("combatarena detected")
     loadstring(game:HttpGet("https://raw.githubusercontent.com/kimheng9480-coder/2BK2/refs/heads/main/combat%20arena", true))()
-else
-    prin("again")
 end
 
