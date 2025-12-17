@@ -10,7 +10,10 @@ local MAP99 = (
     PlaceId == 90538180673742
 )
 
-local MAP_COMBAT_ARENA = (PlaceId == 15841412989)
+local MAP_COMBAT_ARENA = (
+    PlaceId == 15841412989 or
+    PlaceId == 15694891095 
+)
 
 -- LOAD CORRECT SCRIPT
 if MAP99 then
