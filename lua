@@ -1,4 +1,4 @@
-local MAP99 = game.PlaceId == 79546208627805 or game.PlaceId == 117207664438372
+local MAP99 = game.PlaceId == 79546208627805 or game.PlaceId == 117207664438372 or game.PlaceId == 18410434760
 local MAP_COMBAT_ARENA = game.PlaceId == 15841412989
 
 
