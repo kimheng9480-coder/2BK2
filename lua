@@ -4,6 +4,8 @@ local PlaceId = game.PlaceId
 
 -- MAP CHECKS
 local MAP99 = (
+    PlaceId == 7603690979 or
+    PlaceId == 91259074160628 or
     PlaceId == 79546208627805 or
     PlaceId == 117207664438372 or
     PlaceId == 126509999114328 or
