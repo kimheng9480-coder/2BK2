@@ -12,7 +12,6 @@ local MAP99 = {
 
 
 local MAP_COMBAT_ARENA = {
-    [15841412989] = true,
     [15694891095] = true
 }
 
