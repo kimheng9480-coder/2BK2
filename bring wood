@@ -3,7 +3,7 @@ local tweenInfo = TweenInfo.new(1.2, Enum.EasingStyle.Linear)
 
 local items = workspace.Items:GetChildren()
 
-for i = 1, math.min(10000, #items) do  -- ensures we don't go past available items
+for i = 1, math.min(100000, #items) do  -- ensures we don't go past available items
     local item = items[i]
     if item then
         local targetChild = item:FindFirstChild("Meshes/log_Cylinder")
