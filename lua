@@ -14,8 +14,7 @@ local MAP99 = {
 local MAP_COMBAT_ARENA = {
     [15841412989] = true,
     [91259074160628] = true,
-    [15694891095] = true,
-    [7603690979] = true
+    [15694891095] = true
 }
 
 -- LOAD CORRECT SCRIPT
