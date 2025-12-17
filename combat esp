@@ -1,3 +1,111 @@
+local HENG = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+local MainWindow = HENG:CreateWindow({
+	Name = "Combat Arena by.2BK2",
+	LoadingTitle = "welcome TO 2BK2",
+	LoadingSubtitle = "BK",
+	ConfigurationSaving = {
+	   Enabled = false,
+	   FolderName = nil, -- Create a custom folder for your hub/game
+	   FileName = "BK Hub"
+	},
+	Discord = {
+	   Enabled = false,
+	   Invite = "", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ABCD would be ABCD.
+	   RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+	},
+	KeySystem = true, -- Set this to true to use our key system
+	KeySettings = {
+	   Title = "BK Hub",
+	   Subtitle = "Key System",
+	   Note = "Key = ២០០០៛ អាចប្រើនបានច្រើនអ្នក",
+	   FileName = "SiriusKey",
+	   SaveKey = true,
+	   GrabKeyFromSite = true, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+	   Key = "2BK_236432"
+	}
+ })
+ local MainTab = MainWindow:CreateTab("បាញ់គ្នារ") -- Title, Image
+
+-- SERVICES
+local Players = game:GetService("Players")
+local UIS = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+
+-- VARIABLES
+local LocalPlayer = Players.LocalPlayer
+local Camera = workspace.CurrentCamera
+
+local aimbotEnabled = false
+local aiming = false
+local activeTouchId = nil
+
+-- FIND CLOSEST PLAYER
+local function getClosestPlayer()
+    local closest = nil
+    local shortestDistance = math.huge
+
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer
+            and player.Character
+            and player.Character:FindFirstChild("HumanoidRootPart")
+            and player.Character:FindFirstChild("Humanoid")
+            and player.Character.Humanoid.Health > 0
+            and LocalPlayer.Character
+            and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+            and (player.Team ~= LocalPlayer.Team or LocalPlayer.Team == nil) then
+
+            local distance = (player.Character.HumanoidRootPart.Position -
+                LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+
+            if distance < shortestDistance then
+                shortestDistance = distance
+                closest = player
+            end
+        end
+    end
+
+    return closest
+end
+
+-- INPUT
+UIS.InputBegan:Connect(function(input, gpe)
+    if gpe or not aimbotEnabled then return end
+
+    if input.UserInputType == Enum.UserInputType.MouseButton2 then
+        aiming = true
+
+    elseif input.UserInputType == Enum.UserInputType.Touch then
+        aiming = true
+        activeTouchId = input.TouchId
+    end
+end)
+
+-- INPUT END
+UIS.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton2 then
+        aiming = false
+
+    elseif input.UserInputType == Enum.UserInputType.Touch
+        and input.TouchId == activeTouchId then
+        aiming = false
+        activeTouchId = nil
+    end
+end)
+
+
+-- CAMERA LOCK
+RunService.RenderStepped:Connect(function()
+    if aimbotEnabled and aiming then
+        local target = getClosestPlayer()
+        if target and target.Character then
+            Camera.CFrame = CFrame.new(
+                Camera.CFrame.Position,
+                target.Character.Head.Position
+            )
+        end
+    end
+end)
+
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local Camera = workspace.CurrentCamera
@@ -64,3 +172,31 @@ Players.PlayerAdded:Connect(function(player)
 		CreateESP(player)
 	end
 end)
+
+
+ local Toggle = MainTab:CreateToggle({
+	Name = "Player AimBot / តម្រង់ទៅមនុស្សពិត",
+	CurrentValue = false,
+	Flag = "AIm_Toggle",
+	Callback = function(Value)
+		aimbotEnabled = Value
+	end,
+})
+
+ local Toggle = MainTab:CreateToggle({
+	Name = "ESP.All.Player / មើលមនុស្សពិតទាំងអស់",
+	CurrentValue = false,
+	Flag = "Esp_Toggle",
+	Callback = function(Value)
+		_G.ESPEnabled = Value
+	end,
+})
+
+ local Toggle = MainTab:CreateToggle({
+	Name = "ESP.Enemies / មើលតែសត្រូវប៉ណ្ណោះ / មើលមនុស្សពិតទាំងអស់",
+	CurrentValue = false,
+	Flag = "Esp_Toggle",
+	Callback = function(Value)
+		_G.TeamCheck = Value
+	end,
+})
