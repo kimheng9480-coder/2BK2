@@ -11,6 +11,6 @@ elseif MAP_COMBAT_ARENA then
     print("combatarena detected")
     loadstring(game:HttpGet("https://raw.githubusercontent.com/kimheng9480-coder/2BK2/refs/heads/main/combat%20arena", true))()
 else
-    game.Players.LocalPlayer:Kick("Game not supported")
+    prin("again")
 end
 
