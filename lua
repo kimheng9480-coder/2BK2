@@ -11,12 +11,13 @@ local MAP99 = (
 )
 
 local MAP_COMBAT_ARENA = (
-    PlaceId == 91259074160628 or
-    PlaceId == 7603690979 or
     PlaceId == 15841412989 or
-    PlaceId == 15694891095 or
     PlaceId == 7603690979 or
-    PlaceId == 91259074160628
+    PlaceId == 91259074160628 or
+    PlaceId == 15694891095 or
+    PlaceId == 15841412989 or
+    PlaceId == 7603690979 or
+    PlaceId == 91259074160628   
 )
 
 -- LOAD CORRECT SCRIPT
