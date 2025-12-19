@@ -1,0 +1,83 @@
+local HENG = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+local MainWindow = HENG:CreateWindow({
+	Name = "Combat Arena by.2BK2",
+	LoadingTitle = "welcome TO 2BK2",
+	LoadingSubtitle = "BK",
+	ConfigurationSaving = {
+	   Enabled = false,
+	   FolderName = nil, -- Create a custom folder for your hub/game
+	   FileName = "BK Hub"
+	},
+	Discord = {
+	   Enabled = false,
+	   Invite = "", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ABCD would be ABCD.
+	   RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+	},
+	KeySystem = true, -- Set this to true to use our key system
+	KeySettings = {
+	   Title = "BK Hub",
+	   Subtitle = "Key System",
+	   Note = "Key = ២០០០៛ អាចប្រើនបានច្រើនអ្នក",
+	   FileName = "SiriusKey",
+	   SaveKey = true,
+	   GrabKeyFromSite = true, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+	   Key = "2BK_236432"
+	}
+ })
+ local MainTab = MainWindow:CreateTab("បាញ់គ្នារ") -- Title, Imag
+
+
+
+-- UI toggle to enable/disable magnet
+local MagnetToggle = MainTab:CreateToggle({
+    Name = "Magnet Items",
+    CurrentValue = false,
+    Flag = "Magnet_Toggle",
+    Callback = function(Value)
+        Toggle = Value
+    end,
+})
+
+local TweenService = game:GetService("TweenService")
+local Players = game:GetService("Players")
+
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local hrp = character:WaitForChild("HumanoidRootPart")
+
+local folder = workspace:WaitForChild("Items") -- Folder with all items
+local tweenInfo = TweenInfo.new(0.1, Enum.EasingStyle.Linear)
+
+-- Toggle for enabling/disabling magnet
+
+
+-- List of item names to bring
+local targetNames = {
+    "Carrot", "Broken Fan", "Berry", "Bolt", "Broken Microwave", "Old Flashlight", "Old Radio",
+    "Bandage", "Cake", "Coal", "Coin Stack", "Old Car Engine", "Revolver Ammo", "Rifle Ammo",
+    "Sheet Metal", "Fuel Canister", "Leather Body", "Sapling", "Seed Box", "Laser Fence Blueprint",
+    "UFO Component", "UFO Scrap", "Oil Barrel", "Rifle", "MedKit", "Kunai", "Morsel", "Steak",
+    "Revolver", "Spear", "Washing Machine", "Gem of the Forest Fragment", "Bear Corpse", "Apple",
+    "Good Sack", "Cooked Morsel", "Cultist Gem", "Cultist", "Item Chest", "Item Chest2",
+    "Item Chest3", "Item Chest4", "Item Chest5", "Item Chest6", "Item Chest7", "Item Chest8",
+    "Item Chest9", "Item Chest10", "Item Chest11", "Item Chest12", "Item Chest13", "Item Chest14",
+    "Item Chest15", "Chair", "Wolf Corpse"
+}
+
+-- Main loop to magnet items
+while task.wait(0.1) do
+    if Toggle then
+        local items = folder:GetDescendants()
+        for _, item in ipairs(items) do
+            if table.find(targetNames, item.Name) then
+                if item:IsA("BasePart") then
+                    TweenService:Create(item, tweenInfo, {CFrame = hrp.CFrame * CFrame.new(0,0,-2)}):Play()
+                    task.wait(0.05) -- small delay between items
+                elseif item:IsA("Model") and item.PrimaryPart then
+                    TweenService:Create(item.PrimaryPart, tweenInfo, {CFrame = hrp.CFrame * CFrame.new(0,0,-2)}):Play()
+                    task.wait(0.05) -- small delay between items
+                end
+            end
+        end
+    end
+end
