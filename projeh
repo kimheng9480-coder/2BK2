@@ -1,6 +1,6 @@
 local HENG = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 local MainWindow = HENG:CreateWindow({
-	Name = "Combat Arena by.2BK2",
+	Name = "99 Night in the forest by.2BK2",
 	LoadingTitle = "welcome TO 2BK2",
 	LoadingSubtitle = "BK",
 	ConfigurationSaving = {
@@ -17,14 +17,82 @@ local MainWindow = HENG:CreateWindow({
 	KeySettings = {
 	   Title = "BK Hub",
 	   Subtitle = "Key System",
-	   Note = "Key = ២០០០៛ អាចប្រើនបានច្រើនអ្នក",
+	   Note = "Key = ២០០០៛ អាចប្រើនបានច្រើនអ្នក នឹងលេងបានគ្រប់ហេកដែលខ្ញុំបង្កើត",
 	   FileName = "SiriusKey",
 	   SaveKey = true,
 	   GrabKeyFromSite = true, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
 	   Key = "2BK_236432"
 	}
  })
- local MainTab = MainWindow:CreateTab("បាញ់គ្នារ") -- Title, Imag
+ local MainTab = MainWindow:CreateTab("៩៩យប់") -- Title, Imag
+
+-- SERVICES
+local TweenService = game:GetService("TweenService")
+local Players = game:GetService("Players")
+
+-- PLAYER
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+-- ITEMS FOLDER
+local folder = workspace:WaitForChild("Items")
+local tweenInfo = TweenInfo.new(0.1, Enum.EasingStyle.Linear)
+
+-- TOGGLES
+local Heng10 = false
+
+-- FUNCTION: LIST → LOOKUP (FAST)
+local function toLookup(list)
+	local t = {}
+	for _, v in ipairs(list) do
+		t[v] = true
+	end
+	return t
+end
+
+
+
+local IronItems = toLookup({
+    "Bolt", "Sheet Metal", "UFO Junk", "UFO Component", "Broken Fan",
+	"Old Radio", "Broken Microwave", "Tyre", "Metal Chair", "Old Car Engine",
+	"Washing Machine", "UFO Scrap", "Cultist Gem", "Forest Gem", "Forest Gem Fragment",
+	"Mossy Coin","Meshes/log_Cylinder", "Chair"
+
+})
+-- MAGNET FUNCTION
+local function magnet(item)
+	local targetCF = CFrame.new(
+		20.9187622, 1.88103127, -6.25677347,
+		-1, 0, 0,
+		0, 1, 0,
+		0, 0, -1
+	)
+
+	if item:IsA("BasePart") then
+		TweenService:Create(item, tweenInfo, {CFrame = targetCF}):Play()
+	elseif item:IsA("Model") and item.PrimaryPart then
+		TweenService:Create(item.PrimaryPart, tweenInfo, {CFrame = targetCF}):Play()
+	end
+end
+
+
+-- ✅ ONLY ONE LOOP (THIS IS IMPORTANT)
+task.spawn(function()
+	while task.wait(1) do
+		for _, item in ipairs(folder:GetDescendants()) do
+			local name = item.Name
+
+			if Heng10 and IronItems[name] then
+				magnet(item)
+
+			elseif Heng11 and WoodItems2[name] then
+				magnet(item)
+			end
+		end
+	end
+end)
+
+
 
 -- SERVICES
 local TweenService = game:GetService("TweenService")
@@ -40,7 +108,9 @@ local folder = workspace:WaitForChild("Items")
 local tweenInfo = TweenInfo.new(0.1, Enum.EasingStyle.Linear)
 
 -- TOGGLES
-local Heng1, Heng2, Heng3, Heng4, Heng5 = false, false, false, false, false
+local Heng1, Heng2, Heng3, Heng4, Heng5, Heng6, Heng7, Heng8 =
+	false, false, false, false, false, false, false, false
+
 
 -- FUNCTION: LIST → LOOKUP (FAST)
 local function toLookup(list)
@@ -75,7 +145,7 @@ local allItems = toLookup({
     "Bolt", "Sheet Metal", "UFO Junk", "UFO Component", "Broken Fan",
 	"Old Radio", "Broken Microwave", "Tyre", "Metal Chair", "Old Car Engine",
 	"Washing Machine", "UFO Scrap", "Cultist Gem", "Forest Gem", "Forest Gem Fragment",
-	"Mossy Coin", "Meshes/log_Cylinder", "Chair"
+	"Mossy Coin", "Meshes/log_Cylinder", "Chair", "Seed Box"
 
 
 })
@@ -94,7 +164,7 @@ local ItemItems = toLookup({
 	"Old Rod", "Good Rod", "Strong Rod", "Old Taming Flut", "Good Taming Flute", "Strong Taming Flute", "Old Flashlight",
 	"Strong Flashlight", "Axe Trim Kit", "Armor Trim Kit", "Chili Seeds", "Flower Seeds", "Berry Seeds", "Firefly Seeds",
 	"Dripleaf Seeds", "Moonflower Seeds", "Stareweed Seeds", "Cavevine Seeds", "Mandrake Seeds", "Red Key", "Blue Key",
-	"Yellow Key", "Grey Key", "Frog Key"
+	"Yellow Key", "Grey Key", "Frog Key", "Seed Box"
 })
 
 local WeaponItems = toLookup({
@@ -172,43 +242,48 @@ task.spawn(function()
 end)
 
 MainTab:CreateToggle({
-	Name = "All item",
+	Name = "យករបស់មកទាំងអស់ ",
 	Callback = function(v) Heng7 = v end
 })
 
 MainTab:CreateToggle({
-	Name = "chest",
+	Name = "ទាញប្រអប់មកជិតខ្លួន",
 	Callback = function(v) Heng8 = v end
 })
 
 MainTab:CreateToggle({
-	Name = "Food",
+	Name = "រកអាហារ / ក្រដាស់ជួយ ",
 	Callback = function(v) Heng1 = v end
 })
 
 MainTab:CreateToggle({
-	Name = "Items",
+	Name = "រករបស់សំខាន់មកជិតខ្លួន",
 	Callback = function(v) Heng2 = v end
 })
 
 MainTab:CreateToggle({
-	Name = "Weapons",
+	Name = "រកអាវុត / កាំភ្លើង",
 	Callback = function(v) Heng3 = v end
 })
 
 MainTab:CreateToggle({
-	Name = "Fuel",
+	Name = "ធុងសាំង / ឃ្ជូង",
 	Callback = function(v) Heng4 = v end
 })
 
 MainTab:CreateToggle({
-	Name = "Iron",
+	Name = "រកដែក",
 	Callback = function(v) Heng5 = v end
 })
 
 MainTab:CreateToggle({
-	Name = "Wood",
+	Name = "ប្រមូលឈើដែលកាប់ហើយ",
 	Callback = function(v) Heng6 = v end
+})
+
+MainTab:CreateToggle({
+	Name = "យកឈើនឹងដែកដាក់ម៉ាសុីន សូមយករបស់មកផ្ទ៖សិនចាំប្រើ",
+	Callback = function(v) Heng10 = v end
 })
 
  local Slider = MainTab:CreateSlider({
@@ -220,5 +295,17 @@ MainTab:CreateToggle({
     Flag = "Slider9", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
     Callback = function(Value)
         game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = (Value)
+    end,
+ })
+
+  local Slider = MainTab:CreateSlider({
+    Name = "លត់ខ្ពស់",
+    Range = {1, 350},
+    Increment = 1,
+    Suffix = "Speed",
+    CurrentValue = 1,
+    Flag = "Slider9", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Callback = function(Value)
+        game.Players.LocalPlayer.Character.Humanoid.JumpHeight = (Value)
     end,
  })
