@@ -51,6 +51,35 @@ local function toLookup(list)
 	return t
 end
 
+local allItems = toLookup({
+    "Carrot", "Corn", "Pumpkin", "Berry", "Apple", "Morsel", "Morsel?", "Cooked Morsel", "Steak", "Cooked Steak", "Ribs",
+	"Cooked Ribs", "Cake", "Chili", "Stew", "Hearty Stew", "Meat? Sandwich", "Seafood Chowder", "Steak Dinner", "Pumpkin Soup",
+	"BBQ Ribs", "Carrot Cake", "Jar o' Jelly", "Candy Apple", "Candy Corn", "Pumpkin Pie", "Cotton Candy", "Turkey Leg", "Cooked Turkey Leg",
+	"Stuffing", "Sweet Potato", "Turkey Legs", "Berry Juice", "Casserole", "Corn on the Cob", "Stuffing Bowl", "Roast Turkey", "Stuffed Peppers",
+	"Sweet Potato Pie", "Spicy Swordfish", "BBQ Ribs", "Hearty Thanksgiving Meal", "Bandage", "Medkit", "Coin Stack",
+    "Old Sack", "Good Sack", "Infernal Sack", "Giant Sack", "Old Axe", "Good Axe", "Ice Axe", "Strong Axe", "Chainsaw",
+	"Old Rod", "Good Rod", "Strong Rod", "Old Taming Flut", "Good Taming Flute", "Strong Taming Flute", "Old Flashlight",
+	"Strong Flashlight", "Axe Trim Kit", "Armor Trim Kit", "Chili Seeds", "Flower Seeds", "Berry Seeds", "Firefly Seeds",
+	"Dripleaf Seeds", "Moonflower Seeds", "Stareweed Seeds", "Cavevine Seeds", "Mandrake Seeds", "Red Key", "Blue Key",
+	"Yellow Key", "Grey Key", "Frog Key","Spear", "Morningstar", "Katana", "Laser Sword", "Ice Sword", "Trident", "Poison Spear",
+	"Infernal Sword", "Cultist King Mace", "Obsidiron Hammer", "Scythe", "Vampire Scythe",
+	"Revolver", "Rifle", "Tactical Shotgun", "Snowball", "Frozen Shuriken", "Kunai",
+	"Ray Gun", "Laser Cannon", "Flamethrower", "Blowpipe", "Crossbow", "Wildfire", "Infernal Crossbow",
+	"Witch Potion", "Bouncing Blade", "Air Rifle", "Revolver Ammo", "Rifle Ammo", "Shotgun Ammo", "Leather Body",
+	"Poison Armor", "Iron Body", "Thorn Body", "Riot Shield", "Alien Armor", "Obsidiron Body", "Vampire Cloak",
+	"Flamethrower", "Watering Can", "Chef's Station", "Recipe Book", "Katana", "Front of Support Notes", "Back of Support Notes",
+	"Cultist Staff", "Witch Potion", "Crafting Blueprint", "Defense Blueprint", "Furniture Blueprint", "Obsidiron Chest Blueprint",
+	"Halloween Blueprint", "Hammer", "Paint Brush","Chair", "Biofuel", "Coal", "Purple Fur Tuft", "Fuel Canister", "Oil Barrel",
+	"Cultist Corpse", "Crossbow Cultist Corps", "Juggernaut Cultist Corpse", "Cultist King Corpse",
+	"Alien Corpse", "Elite Alien Corpse", "Wolf Corpse", "Alpha Wolf Corpse", "Bear Corpse", "Sapling", "Cultist",
+    "Bolt", "Sheet Metal", "UFO Junk", "UFO Component", "Broken Fan",
+	"Old Radio", "Broken Microwave", "Tyre", "Metal Chair", "Old Car Engine",
+	"Washing Machine", "UFO Scrap", "Cultist Gem", "Forest Gem", "Forest Gem Fragment",
+	"Mossy Coin", "Meshes/log_Cylinder", "Chair"
+
+
+})
+
 -- ITEM GROUPS
 local FoodItems = toLookup({
     "Carrot", "Corn", "Pumpkin", "Berry", "Apple", "Morsel", "Morsel?", "Cooked Morsel", "Steak", "Cooked Steak", "Ribs",
@@ -97,6 +126,13 @@ local WoodItems = toLookup({
 	"Meshes/log_Cylinder", "Chair"
 })
 
+local ChestItems = toLookup({
+
+    "Halloween Chest1", "Halloween Chest1", "Halloween Chest2", "Halloween Chest3", "Halloween Chest4", "Halloween Chest5", 
+    "Halloween Chest6", "Halloween Chest7", "Halloween Chest8", "Halloween Chest9",  "Item Chest",
+    "Item Chest1", "Item Chest2", "Item Chest3", "Item Chest4", "Item Chest5", "Item Chest6", "Item Chest7"
+})
+
 -- MAGNET FUNCTION
 local function magnet(item)
 	local cf = hrp.CFrame * CFrame.new(0,0,-2)
@@ -124,12 +160,26 @@ task.spawn(function()
 				magnet(item)
 			elseif Heng5 and IronItems[name] then
 				magnet(item)
+            elseif Heng7 and allItems[name] then
+				magnet(item)
+            elseif Heng8 and ChestItems[name] then
+				magnet(item)
 			elseif Heng6 and WoodItems[name] then
 				magnet(item)
 			end
 		end
 	end
 end)
+
+MainTab:CreateToggle({
+	Name = "All item",
+	Callback = function(v) Heng7 = v end
+})
+
+MainTab:CreateToggle({
+	Name = "chest",
+	Callback = function(v) Heng8 = v end
+})
 
 MainTab:CreateToggle({
 	Name = "Food",
