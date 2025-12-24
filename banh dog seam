@@ -13,6 +13,21 @@ destroyIfExists(character:FindFirstChild("SPH_Character") and character.SPH_Char
 
 
 
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+local function destroyIfExists(path)
+    if path then
+        path:Destroy()
+    end
+end
+
+destroyIfExists(character:FindFirstChild("SPH_Character") and character.SPH_Character:FindFirstChild("FallDamage"))
+destroyIfExists(character:FindFirstChild("SPH_Character") and character.SPH_Character:FindFirstChild("RigUpdater"))
+destroyIfExists(character:FindFirstChild("SPH_Character") and character.SPH_Character:FindFirstChild("FirstPersonVisibility"))
+
+
+
 local HENG = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 local MainWindow = HENG:CreateWindow({
 	Name = "Border[WAR] បាញ់ឆ្កែសៀម by.2BK2",
@@ -59,7 +74,7 @@ _G.Sensitivity = 0 -- How many seconds it takes for the aimbot script to officia
 _G.CircleSides = 64 -- How many sides the FOV circle would have.
 _G.CircleColor = Color3.fromRGB(255, 255, 255) -- (RGB) Color that the FOV circle would appear as.
 _G.CircleTransparency = 0.7 -- Transparency of the circle.
-_G.CircleRadius = 100 -- The radius of the circle / FOV.
+_G.CircleRadius = 200 -- The radius of the circle / FOV.
 _G.CircleFilled = false -- Determines whether or not the circle is filled.
 _G.CircleVisible = true -- Determines whether or not the circle is visible.
 _G.CircleThickness = 0 -- The thickness of the circle.
@@ -119,12 +134,17 @@ end
 UserInputService.InputBegan:Connect(function(Input)
     if Input.UserInputType == Enum.UserInputType.MouseButton2 then
         Holding = true
+    elseif Input.UserInputType == Enum.UserInputType.Touch then
+        Holding = true
+        
     end
 end)
 
 UserInputService.InputEnded:Connect(function(Input)
     if Input.UserInputType == Enum.UserInputType.MouseButton2 then
         Holding = false
+    elseif Input.UserInputType == Enum.UserInputType.Touch then
+        Holding = false     
     end
 end)
 
