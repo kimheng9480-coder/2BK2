@@ -127,73 +127,79 @@ RunService.RenderStepped:Connect(function()
 	end
 end)
 
-
-
+local HENG = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+local MainWindow = HENG:CreateWindow({
+	Name = "Border[WAR] បាញ់ឆ្កែសៀម by.2BK2",
+	LoadingTitle = "welcome TO 2BK2",
+	LoadingSubtitle = "BK",
+	ConfigurationSaving = {
+	   Enabled = false,
+	   FolderName = nil, -- Create a custom folder for your hub/game
+	   FileName = "BK Hub"
+	},
+	Discord = {
+	   Enabled = false,
+	   Invite = "", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ABCD would be ABCD.
+	   RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+	},
+	KeySystem = true, -- Set this to true to use our key system
+	KeySettings = {
+	   Title = "BK Hub",
+	   Subtitle = "Key System",
+	   Note = "Key = ២០០០៛ អាចប្រើនបានច្រើនអ្នក",
+	   FileName = "SiriusKey",
+	   SaveKey = true,
+	   GrabKeyFromSite = true, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+	   Key = "2BK_236432"
+	}
+ })
+ local MainTab = MainWindow:CreateTab("បាញ់គ្នារ") -- Title, Image
 
 local Camera = workspace.CurrentCamera
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
-local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
 local LocalPlayer = Players.LocalPlayer
-local Holding = false
 
- -- If set to true then the script would only lock your aim at enemy team members.
-_G.AimPart = "Head" -- Where the aimbot script would lock at.
-_G.Sensitivity = 0 -- How many seconds it takes for the aimbot script to officially lock onto the target's aimpart.
+-- GLOBAL SETTINGS
+_G.AimbotEnabled = false
+_G.TeamCheck = true
+_G.AimPart = "Head"
+_G.Sensitivity = 0
 
-_G.CircleSides = 64 -- How many sides the FOV circle would have.
-_G.CircleColor = Color3.fromRGB(255, 255, 255) -- (RGB) Color that the FOV circle would appear as.
-_G.CircleTransparency = 0.7 -- Transparency of the circle.
-_G.CircleRadius = 200 -- The radius of the circle / FOV.
-_G.CircleFilled = false -- Determines whether or not the circle is filled.
-_G.CircleVisible = true -- Determines whether or not the circle is visible.
-_G.CircleThickness = 0 -- The thickness of the circle.
+-- GUI Toggle
+local Toggle = MainTab:CreateToggle({
+	Name = "Aimbot / មើលមនុស្សពិតទាំងអស់",
+	CurrentValue = false,
+	Flag = "aimbot",
+	Callback = function(Value)
+		_G.AimbotEnabled = Value
+	end,
+})
 
-local FOVCircle = Drawing.new("Circle")
-FOVCircle.Position = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
-FOVCircle.Radius = _G.CircleRadius
-FOVCircle.Filled = _G.CircleFilled
-FOVCircle.Color = _G.CircleColor
-FOVCircle.Visible = _G.CircleVisible
-FOVCircle.Radius = _G.CircleRadius
-FOVCircle.Transparency = _G.CircleTransparency
-FOVCircle.NumSides = _G.CircleSides
-FOVCircle.Thickness = _G.CircleThickness
-
+-- Get closest player to screen center
 local function GetClosestPlayer()
-	local MaximumDistance = _G.CircleRadius
+	local MaxDistance = math.huge
 	local Target = nil
+	local ScreenCenter = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
 
-	for _, v in next, Players:GetPlayers() do
-		if v.Name ~= LocalPlayer.Name then
-			if _G.TeamCheck == true then
-				if v.Team ~= LocalPlayer.Team then
-					if v.Character ~= nil then
-						if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
-							if v.Character:FindFirstChild("Humanoid") ~= nil and v.Character:FindFirstChild("Humanoid").Health ~= 0 then
-								local ScreenPoint = Camera:WorldToScreenPoint(v.Character:WaitForChild("HumanoidRootPart", math.huge).Position)
-								local VectorDistance = (Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y) - Vector2.new(ScreenPoint.X, ScreenPoint.Y)).Magnitude
-								
-								if VectorDistance < MaximumDistance then
-									Target = v
-								end
-							end
-						end
-					end
-				end
-			else
-				if v.Character ~= nil then
-					if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
-						if v.Character:FindFirstChild("Humanoid") ~= nil and v.Character:FindFirstChild("Humanoid").Health ~= 0 then
-							local ScreenPoint = Camera:WorldToScreenPoint(v.Character:WaitForChild("HumanoidRootPart", math.huge).Position)
-							local VectorDistance = (Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y) - Vector2.new(ScreenPoint.X, ScreenPoint.Y)).Magnitude
-							
-							if VectorDistance < MaximumDistance then
-								Target = v
-							end
-						end
-					end
+	for _, v in ipairs(Players:GetPlayers()) do
+		if v ~= LocalPlayer
+			and v.Character
+			and v.Character:FindFirstChild(_G.AimPart)
+			and v.Character:FindFirstChild("Humanoid")
+			and v.Character.Humanoid.Health > 0 then
+
+			if _G.TeamCheck and v.Team == LocalPlayer.Team then
+				continue
+			end
+
+			local pos, onScreen = Camera:WorldToViewportPoint(v.Character[_G.AimPart].Position)
+			if onScreen then
+				local distance = (Vector2.new(pos.X, pos.Y) - ScreenCenter).Magnitude
+				if distance < MaxDistance then
+					MaxDistance = distance
+					Target = v
 				end
 			end
 		end
@@ -202,38 +208,22 @@ local function GetClosestPlayer()
 	return Target
 end
 
-UserInputService.InputBegan:Connect(function(Input)
-    if Input.UserInputType == Enum.UserInputType.MouseButton2 then
-        Holding = true
-    elseif Input.UserInputType == Enum.UserInputType.Touch then
-        Holding = true
-        
-    end
-end)
-
-UserInputService.InputEnded:Connect(function(Input)
-    if Input.UserInputType == Enum.UserInputType.MouseButton2 then
-        Holding = false
-    elseif Input.UserInputType == Enum.UserInputType.Touch then
-        Holding = false     
-    end
-end)
-
+-- Aimbot loop (toggle only)
 RunService.RenderStepped:Connect(function()
-    FOVCircle.Position = Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y)
-    FOVCircle.Radius = _G.CircleRadius
-    FOVCircle.Filled = _G.CircleFilled
-    FOVCircle.Color = _G.CircleColor
-    FOVCircle.Visible = _G.CircleVisible
-    FOVCircle.Radius = _G.CircleRadius
-    FOVCircle.Transparency = _G.CircleTransparency
-    FOVCircle.NumSides = _G.CircleSides
-    FOVCircle.Thickness = _G.CircleThickness
+	if not _G.AimbotEnabled then return end
 
-    if Holding == true and _G.AimbotEnabled == true then
-        TweenService:Create(Camera, TweenInfo.new(_G.Sensitivity, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {CFrame = CFrame.new(Camera.CFrame.Position, GetClosestPlayer().Character[_G.AimPart].Position)}):Play()
-    end
+	local Target = GetClosestPlayer()
+	if Target and Target.Character and Target.Character:FindFirstChild(_G.AimPart) then
+		TweenService:Create(
+			Camera,
+			TweenInfo.new(_G.Sensitivity, Enum.EasingStyle.Sine, Enum.EasingDirection.Out),
+			{CFrame = CFrame.new(Camera.CFrame.Position, Target.Character[_G.AimPart].Position)}
+		):Play()
+	end
 end)
+
+
+
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -301,15 +291,6 @@ Players.PlayerAdded:Connect(function(player)
 		CreateESP(player)
 	end
 end)
-
- local Toggle = MainTab:CreateToggle({
-	Name = "Player AimBot / តម្រង់ទៅមនុស្សពិត",
-	CurrentValue = false,
-	Flag = "AIm_Toggle",
-	Callback = function(Value)
-		_G.AimbotEnabled = Value
-	end,
-})
 
  local Toggle = MainTab:CreateToggle({
 	Name = "ESP.All.Player / មើលមនុស្សពិតទាំងអស់",
