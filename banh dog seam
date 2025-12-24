@@ -58,6 +58,77 @@ local MainWindow = HENG:CreateWindow({
 
 
 
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+local root = character:WaitForChild("HumanoidRootPart")
+
+-- SETTINGS
+local FLY_SPEED = 75
+local UP_SPEED = 45
+
+-- Body movers
+local gyro = Instance.new("BodyGyro")
+gyro.P = 9000
+gyro.MaxTorque = Vector3.new(9e9, 9e9, 9e9)
+gyro.CFrame = root.CFrame
+
+local velocity = Instance.new("BodyVelocity")
+velocity.MaxForce = Vector3.new(9e9, 9e9, 9e9)
+
+-- Fly toggle variable
+local fly = false
+
+-- GUI Toggle (example, adjust according to your GUI library)
+local Toggle = MainTab:CreateToggle({
+	Name = "Fly / ហោះ", 
+	CurrentValue = false,
+	Flag = "fly", 
+	Callback = function(Value)
+		fly = Value
+	end,
+})
+
+-- Render loop
+RunService.RenderStepped:Connect(function()
+	if not fly then
+		-- Disable fly
+		if gyro.Parent then gyro.Parent = nil end
+		if velocity.Parent then velocity.Parent = nil end
+		humanoid.PlatformStand = false
+		return
+	end
+
+	-- Enable fly
+	if not gyro.Parent then gyro.Parent = root end
+	if not velocity.Parent then velocity.Parent = root end
+	humanoid.PlatformStand = true
+
+	local moveDir = humanoid.MoveDirection
+
+	-- Horizontal movement
+	local move = moveDir * FLY_SPEED
+
+	-- Vertical movement (UP only)
+	if humanoid.Jump then
+		move = Vector3.new(move.X, UP_SPEED, move.Z)
+	else
+		move = Vector3.new(move.X, 0, move.Z) -- hover
+	end
+
+	velocity.Velocity = move
+
+	-- Face movement direction
+	if moveDir.Magnitude > 0 then
+		gyro.CFrame = CFrame.new(root.Position, root.Position + moveDir)
+	end
+end)
+
+
+
 
 local Camera = workspace.CurrentCamera
 local Players = game:GetService("Players")
