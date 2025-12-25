@@ -67,7 +67,7 @@ local humanoid = character:WaitForChild("Humanoid")
 local root = character:WaitForChild("HumanoidRootPart")
 
 -- SETTINGS
-local FLY_SPEED = 75
+local FLY_SPEED = 200
 local UP_SPEED = 45
 
 -- Body movers
